@@ -1,83 +1,78 @@
 import { json } from "express";
 import Note from "../models/note.model.js";
+import { readNotes, writeNotes } from "../data/note.read.js";
 
-//Create a new note
-export const createNote = async (req, res) => {
+// Create a new note
+export const createNote = (req, res) => {
   try {
     const { title, content, isFavourite } = req.body;
-    const newNote = new Note({
+    const notes = readNotes();
+    const newNote = {
+      id: Date.now(),
       title,
       content,
-      isFavourite,
-    });
-    const note = await newNote.save();
-    console.log("Note", title);
-    res.status(201).json(note);
+      isFavourite: isFavourite || false,
+      createdAt: new Date(),
+    };
+    notes.push(newNote);
+    writeNotes(notes);
+    res.status(201).json(newNote);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 // Update a specific note by ID
-export const updateNote = async (req, res) => {
+export const updateNote = (req, res) => {
   try {
     const { id } = req.params;
     const { title, content, isFavourite } = req.body;
+    const notes = readNotes();
+    const noteIndex = notes.findIndex((note) => note.id === parseInt(id));
 
-    const updatedNote = await Note.findByIdAndUpdate(
-      id,
-      { title, content, isFavourite },
-      { new: true }
-    );
-
-    if (!updatedNote) {
-      return res
-        .status(404)
-        .json({ message: `The selected note ID ${id} not found` });
+    if (noteIndex === -1) {
+      return res.status(404).json({ message: `Note with ID ${id} not found` });
     }
 
-    res.status(200).json(updatedNote);
+    notes[noteIndex] = { ...notes[noteIndex], title, content, isFavourite };
+    writeNotes(notes);
+    res.status(200).json(notes[noteIndex]);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-//Get all notes
-export const getNotes = async (req, res) => {
+// Get all notes
+export const getNotes = (req, res) => {
   try {
     const { startDate, endDate } = req.query;
+    const notes = readNotes();
+    let filteredNotes = notes;
 
-    let query = {};
     if (startDate || endDate) {
-      query.createdAt = {};
-      if (startDate) {
-        query.createdAt.$gte = new Date(startDate);
-      }
-      if (endDate) {
-        query.createdAt.$lte = new Date(endDate);
-      }
-
-      const notes = await Note.find(query);
-      res.status(200).json(notes);
-    } else {
-      const notes = await Note.find();
-      res.status(200).json(notes);
+      filteredNotes = notes.filter((note) => {
+        const createdAt = new Date(note.createdAt);
+        return (
+          (!startDate || createdAt >= new Date(startDate)) &&
+          (!endDate || createdAt <= new Date(endDate))
+        );
+      });
     }
+    res.status(200).json(filteredNotes);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
 // Get a specific note by ID
-export const getNoteById = async (req, res) => {
+export const getNoteById = (req, res) => {
   try {
     const { id } = req.params;
-    const note = await Note.findById(id);
+    const notes = readNotes();
+    const note = notes.find((note) => note.id === parseInt(id));
 
     if (!note) {
-      return res
-        .status(404)
-        .json({ message: `The selected note ID ${id} not found` });
+      return res.status(404).json({ message: `Note with ID ${id} not found` });
     }
     res.status(200).json(note);
   } catch (error) {
@@ -85,27 +80,21 @@ export const getNoteById = async (req, res) => {
   }
 };
 
-//Delete a specific note by ID
-export const deleteNote = async (req, res) => {
+// Delete a specific note by ID
+export const deleteNote = (req, res) => {
   try {
     const { id } = req.params;
-
-    const note = await Note.findByIdAndDelete(id);
-
-    if (!note) {
-      return res
-        .status(404)
-        .json({ message: `The selected note ID ${id} not found` });
-    }
-
+    let notes = readNotes();
+    notes = notes.filter((note) => note.id !== parseInt(id));
+    writeNotes(notes);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Search Note by keyword
-export const searchNotes = async (req, res) => {
+// Search notes by keyword
+export const searchNotes = (req, res) => {
   try {
     const { keyword } = req.query;
 
@@ -113,10 +102,11 @@ export const searchNotes = async (req, res) => {
       return res.status(400).json({ message: "Search keyword is required" });
     }
 
-    const notes = await Note.find({
-      title: { $regex: keyword, $options: "i" },
-    });
-    res.status(200).json(notes);
+    const notes = readNotes();
+    const filteredNotes = notes.filter((note) =>
+      note.title.toLowerCase().includes(keyword.toLowerCase())
+    );
+    res.status(200).json(filteredNotes);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

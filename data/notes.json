@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1724154779714,
+    "title": "Krabby Patty",
+    "content": "Fish eats jelly",
+    "isFavourite": false,
+    "createdAt": "2024-08-20T11:52:59.714Z"
+  },
+  {
+    "id": 1724154837771,
+    "title": "Band Name",
+    "content": "The Beatles",
+    "isFavourite": true,
+    "createdAt": "2024-08-20T11:53:57.771Z"
+  },
+  {
+    "id": 1724154858588,
+    "title": "Band Name",
+    "content": "Pink Flyod",
+    "isFavourite": true,
+    "createdAt": "2024-08-20T11:54:18.588Z"
+  },
+  {
+    "id": 1724154864307,
+    "title": "Coolest Person",
+    "content": "Patrick Star is the coolest Star ever to grace this planet",
+    "isFavourite": true,
+    "createdAt": "2024-08-20T11:54:24.307Z"
+  },
+  {
+    "id": 1724154930922,
+    "title": "Krabby Patty",
+    "content": "Mr Krabs love MONEY",
+    "isFavourite": true,
+    "createdAt": "2024-08-20T11:55:30.922Z"
+  },
+  {
+    "id": 1724154943212,
+    "title": "Gamer Tag",
+    "content": "Arcane",
+    "isFavourite": false,
+    "createdAt": "2024-08-20T11:55:43.212Z"
+  },
+  {
+    "id": 1724154961707,
+    "title": "Krabby Patty",
+    "content": "Squiqward and his job",
+    "isFavourite": false,
+    "createdAt": "2024-08-20T11:56:01.707Z"
+  },
+  {
+    "id": 1724155299362,
+    "title": "Pineapple House",
+    "content": "Spongbob Squarepants",
+    "isFavourite": false,
+    "createdAt": "2024-08-20T12:01:39.362Z"
+  }
+]
