@@ -36,11 +36,13 @@ git clone https://github.com/yourusername/personal-notes.git
 cd personal-notes
 ```
 ###2. Install Dependencies
+```bash
 npm install
-
+```
 ###3. Run the Server
+```bash
 node server.js
-
+```
 ###4. Test the API
 You can use Postman or any other API client to test the API endpoints.
 
