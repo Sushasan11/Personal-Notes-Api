@@ -35,15 +35,15 @@ Follow these steps to get the project up and running on your local machine.
 git clone https://github.com/yourusername/personal-notes.git
 cd personal-notes
 ```
-###2. Install Dependencies
+### 2. Install Dependencies
 ```bash
 npm install
 ```
-###3. Run the Server
+### 3. Run the Server
 ```bash
 node server.js
 ```
-###4. Test the API
+### 4. Test the API
 
 You can use Postman or any other API client to test the API endpoints.
 
